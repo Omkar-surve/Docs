@@ -1,0 +1,17 @@
+policy-map MARKING_ACCESS_GROUPS
+ description marking traffic from Access network
+ class ACCESS_VOICE
+  set dscp ef
+ class ACCESS_VIDEO
+  set dscp cs4
+ class ACCESS_NOC_MISSION_CRITICAL_DATA
+  set dscp 25
+ class ACCESS_MANAGEMENT
+  set dscp cs2
+ class ACCESS_TRANSACTIONAL_DATA
+  set dscp af21
+ class ACCESS_BULK_DATA
+  set dscp af11
+ class ACCESS_BEST_EFFORT
+  set dscp default
+!
