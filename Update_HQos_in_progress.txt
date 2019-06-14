@@ -1,0 +1,39 @@
+Total BW: 10000000
+
+Voice
+Priority level 1 percent 10
+==> 10% of 10000000 with drop of 1 out of 10 packets in queue
+###priority levels: level 1 (high) and level 2 (low)
+
+
+=========================================================================
+
+policy-map MARKING_ACCESS_GROUPS
+ description marking traffic from Access network
+ class ACCESS_VOICE
+  set dscp ef
+ class ACCESS_VIDEO
+  set dscp cs4
+ class ACCESS_NOC_MISSION_CRITICAL_DATA
+  set dscp 25
+ class ACCESS_MANAGEMENT
+  set dscp cs2
+ class ACCESS_TRANSACTIONAL_DATA
+  set dscp af21
+ class ACCESS_BULK_DATA
+  set dscp af11
+ class ACCESS_BEST_EFFORT
+  set dscp default
+policy-map SECNG_AND_SHPG_ACCESS_GROUP
+ description sechudling and shaping access-group traffic towards ISP
+ class ACCESS_VOICE
+  priority level 1 percent 10
+  police cir 1000000 conform-action transmit  exceed-action drop  violate-action drop 
+ class ACCESS_VIDEO
+  priority level 2 percent 10
+  police cir 800000 conform-action transmit  exceed-action transmit  violate-action drop 
+ class ACCESS_NOC_MISSION_CRITICAL_DATA
+!
+end
+================================================
+https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/qos_conmgt/configuration/xe-3s/qos-conmgt-xe-3s-book/qos-conmgt-multilevel-pq.html
