@@ -1,0 +1,88 @@
+class-map match-any ACCESS_BULK_DATA
+  description websites and ftp
+ match protocol http
+ match protocol teamviewer
+ match protocol ftp
+ match protocol ftp-data
+ match access-group 100
+class-map match-any ACCESS_BEST_EFFORT
+  description Rest of the traffic
+ match any 
+class-map match-any ACCESS_VIDEO
+  description Video streaming, and conferencing in Access network
+ match application ip-camera
+ match application surveillance-distribution
+ match application webex-meeting
+ match application telepresence-media
+class-map match-any ACCESS_VOICE
+  description Cisco IP phones traffic in Access network
+ match application rtp
+ match application sip
+class-map match-any ACCESS_NOC_MISSION_CRITICAL_DATA
+  description Mission critical data like user logins, DNS, NTP
+ match application application-group vmware-group
+ match application citrix
+class-map match-any ACCESS_MANAGEMENT
+  description telnets, ssh etc
+ match protocol ssh
+ match protocol rdp
+ match protocol telnet
+class-map match-any ACCESS_TRANSACTIONAL_DATA
+  description mails and Skype
+ match protocol smtp
+ match protocol smsp
+ match protocol skype
+ match protocol skydrive
+ match protocol dropbox
+ match protocol share-point
+ match protocol share
+ match protocol iscsi
+!
+policy-map MARKING_ACCESS_GROUPS
+ description marking traffic from Access network
+ class ACCESS_VOICE
+  set dscp ef
+ class ACCESS_VIDEO
+  set dscp cs4
+ class ACCESS_NOC_MISSION_CRITICAL_DATA
+  set dscp 25
+ class ACCESS_MANAGEMENT
+  set dscp cs2
+ class ACCESS_TRANSACTIONAL_DATA
+  set dscp af21
+ class ACCESS_BULK_DATA
+  set dscp af11
+ class ACCESS_BEST_EFFORT
+  set dscp default
+policy-map SECNG_AND_SHPG_ACCESS_GROUP
+ description sechudling and shaping access-group traffic towards ISP
+ class ACCESS_VOICE
+  priority level 1 percent 10
+  police cir 1000000 conform-action transmit  exceed-action drop  violate-action drop 
+ class ACCESS_VIDEO
+  priority level 2 percent 13
+  police cir 1170000 conform-action transmit  exceed-action transmit  violate-action drop 
+ class ACCESS_NOC_MISSION_CRITICAL_DATA
+  bandwidth remaining percent 19 
+  shape average 1480000   
+ class ACCESS_MANAGEMENT
+  bandwidth remaining percent 9 
+ class ACCESS_TRANSACTIONAL_on DATA
+  bandwidth remaining percent 19 
+ class ACCESS_BEST_EFFORT
+  bandwidth remaining percent 9 
+ class ACCESS_BULK_DATA
+  bandwidth remaining percent 20 
+  shape peak percent 17   
+ class class-default
+  bandwidth remaining percent 1 
+policy-map TOWARDS_ISP_SHAPER
+ class class-default
+  bandwidth percent 87 
+   service-policy SECNG_AND_SHPG_ACCESS_GROUP
+!
+
+On outgoing interface:
+interface Ethernet0/0
+ service-policy output TOWARDS_ISP_SHAPER
+!
