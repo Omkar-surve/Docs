@@ -1,0 +1,114 @@
+Ingress PE independently marks CE packets using MPLS EXP bits. Egress PE does shaping and queing based on original marking (DSCP/IPP markings by CE).
+
+AT INGRESS ROUTER:
+
+STEP1: CLASSIFYING CE's TRAFFIC BASED ON ISP'S 5-CLASS QOS MODEL
+
+class-map match-any NOC_MGMT
+ match dscp cs2 
+class-map match-any REALTIME
+ match dscp cs4  ef 
+class-map match-any NOC_CRITICAL
+ match dscp 25 
+class-map match-any BEST_EFFORT
+ match dscp default 
+class-map match-any BULK_DATA
+ match dscp af11  af21 
+!
+
+STEP2: MARKING CLASSIFIED CE's TRAFFIC TO MPLS EXP BITS AS PER ISP'S STANDARD
+
+policy-map SHORT_PIPE_DSCP_EXP_INGRESS
+ class REALTIME
+  set mpls experimental imposition 5
+  police cir 2500000 conform-action transmit  exceed-action set-mpls-exp-imposition-transmit 0 violate-action drop 
+ class NOC_MGMT
+  set mpls experimental imposition 4
+  police cir 1500000 conform-action transmit  exceed-action transmit  violate-action set-mpls-exp-imposition-transmit 1
+ class NOC_CRITICAL
+  set mpls experimental imposition 3
+  police cir 1000000 conform-action transmit  exceed-action transmit  violate-action transmit 
+ class BULK_DATA
+  set mpls experimental imposition 2
+  police cir 3000000 bc 1500 conform-action transmit  exceed-action set-mpls-exp-imposition-transmit 0 violate-action drop 
+ class BEST_EFFORT
+  set mpls experimental imposition 1
+  police cir 1300000 conform-action transmit  exceed-action set-mpls-exp-imposition-transmit 0 violate-action drop 
+ class class-default
+  set mpls experimental imposition 0
+  police cir 500000 conform-action transmit  exceed-action drop  violate-action drop 
+!
+
+STEP3: APPLYING DSCP/IPP===>MPLS EXP MARKING POLICY ON INCOMING PORT
+
+interface Ethernet0/3
+ description towards CE24 e0/0
+ vrf forwarding N
+ service-policy input SHORT_PIPE_DSCP_EXP_INGRESS
+!
+
+AT 	EGRESS ROUTER:
+
+STEP1: MATCHING ORIGNAL CE DSCP/IPP MARKED TRAFFIC LEAVING ISP EDGE
+
+class-map match-all DSCP_EF
+ match dscp ef 
+class-map match-all DSCP_25
+ match dscp 25 
+class-map match-all DSCP_AF11
+ match dscp af11 
+class-map match-all DSCP_AF21
+ match dscp af21 
+class-map match-all DSCP_CS2
+ match dscp cs2 
+class-map match-all DSCP_CS4
+ match dscp cs4 
+!
+class-map match-all DSCP_DEFAULT
+ match dscp default
+!
+
+STEP2: SHAPING THE CE's TRAFFIC BASED ON ORIGNAL DSCP MARKINGS DONE BY CE
+
+policy-map TOWARDS_ISP_BOB_VRF_N
+ class DSCP_EF
+  priority level 1 percent 10 500
+  police cir percent 15 bc 1000 ms conform-action transmit  exceed-action drop  violate-action drop 
+ class DSCP_25
+  bandwidth remaining percent 19 
+  shape average 570000   
+ class DSCP_CS4
+  priority level 2 percent 13
+  police cir percent 10 bc 1800 ms conform-action transmit  exceed-action drop  violate-action drop 
+ class DSCP_CS2
+  bandwidth remaining percent 9 
+ class DSCP_AF21
+  bandwidth remaining percent 19 
+ class DSCP_DEFAULT
+  bandwidth remaining percent 9 
+ class DSCP_AF11
+  bandwidth remaining percent 20 
+  shape peak percent 17   
+ class class-default
+  bandwidth remaining percent 1 
+!
+
+STEP3: QUEUING THE CE's TRAFFIC ON EGRESS PORT ON ISP END
+
+policy-map QUEUE_VRF_N_TOWARDS_BOB
+ class class-default
+  random-detect dscp-based
+  bandwidth percent 95 
+   service-policy TOWARDS_ISP_BOB_VRF_N
+!
+
+STEP4: APPLYING FINAL SHAPING AND QUEUED POLICY ON EGRESS PORT
+
+interface Ethernet0/3
+ description towards CE24 e0/0
+ vrf forwarding N
+ service-policy input SHORT_PIPE_DSCP_EXP_INGRESS
+ service-policy output QUEUE_VRF_N_TOWARDS_CE
+!
+
+NOTE: At egress sub-interfaces CBWFQ is not supported. ERROR:  CBWFQ : Not supported on subinterfaces
