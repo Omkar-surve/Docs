@@ -1,3 +1,5 @@
+// CLassify the traffic:
+
 class-map match-any ACCESS_BULK_DATA
   description websites and ftp
  match protocol http
@@ -38,6 +40,9 @@ class-map match-any ACCESS_TRANSACTIONAL_DATA
  match protocol share
  match protocol iscsi
 !
+
+//Marking classified traffic
+
 policy-map MARKING_ACCESS_GROUPS
  description marking traffic from Access network
  class ACCESS_VOICE
@@ -54,6 +59,10 @@ policy-map MARKING_ACCESS_GROUPS
   set dscp af11
  class ACCESS_BEST_EFFORT
   set dscp default
+!
+
+// Shaping traffic class-based
+
 policy-map SECNG_AND_SHPG_ACCESS_GROUP
  description sechudling and shaping access-group traffic towards ISP
  class ACCESS_VOICE
@@ -75,14 +84,19 @@ policy-map SECNG_AND_SHPG_ACCESS_GROUP
   bandwidth remaining percent 20 
   shape peak percent 17   
  class class-default
-  bandwidth remaining percent 1 
+  bandwidth remaining percent 1
+!
+
+// Shaping traffic to the physical interface
+
 policy-map TOWARDS_ISP_SHAPER
  class class-default
   bandwidth percent 87 
    service-policy SECNG_AND_SHPG_ACCESS_GROUP
 !
 
-On outgoing interface:
+// On outgoing interface:
+
 interface Ethernet0/0
  service-policy output TOWARDS_ISP_SHAPER
 !
