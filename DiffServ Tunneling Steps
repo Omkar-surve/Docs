@@ -16,3 +16,21 @@ CE DSCP markings are preserved in whole process.
 3) Traffic exiting out of MPLS VPN cloud is queued and shaped based on original CE DSCP markings.
 4) No need of MPLS EXP --> QoS Group and QoS Group --> IP Precedence mapping at egress PE
 
+Pipe Mode:
+=======================
+CE DSCP markings are preserved in whole process.
+1) Ingress PE marks each CE packets independently and does not modify original DSCP marking.
+2) Traffic entering MPLS VPN cloud is policied and marked based on ingress PE policy
+3) Traffic exiting out of MPLS VPN cloud is queued and shaped based on ISP PE's markings (Marking done by ISP itself can be Ingress PE or core router markings)
+4) Requirement of MPLS EXP --> QoS Group and QoS Group --> IP Precedence mapping at egress PE to preserve ISP markings at egress PE also to avoid change in original CE's IPP/DSCP markings to the packet
+
+NOTE:
+Pipe Mode with Explicit Null:
+==============================
+Here CE node is managed by ISP itself. Hence initial IPP/DSCP===>MPLS EXP marking is done by CE.
+Packet is then encapsulated with Explicit null at Egress link of CE i.e. CE-->PE link
+1) Ingress CE marks IPP/DSCP to MPLS EXP bits
+2) Egress CE encapsulates marked MPLS EXP traffic with explicit null towards PE
+3) Ingress PE does normal policing. No marking done.
+4) Traffic exiting out of MPLS VPN cloud is queued and shaped based on MPLS EXP markings available at 'Towards ISP' of remote PE (Egress PE)
+5) Requirement of MPLS EXP --> QoS Group and QoS Group --> IP Precedence mapping at egress PE to preserve MPLS EXP markings at egress PE also to avoid change in original CE's IPP/DSCP markings to the packet.
