@@ -85,6 +85,10 @@ policy-map EXP_to_QOS_GRP_and_DISCARD_CLASS
   set discard-class 0
 !
 
+int gigabitEthernet 1
+ service-policy input EXP_to_QOS_GRP_and_DISCARD_CLASS
+!
+
 STEP 5: EGRESS PE THEN CLASSIFIES LOCAL QOS-GROUP/DISCARD-CLASS MAPPED PACKETS
 
 class-map match-all QOS_GROUP_DISCARD_CLASS_5
