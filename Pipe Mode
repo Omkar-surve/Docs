@@ -135,6 +135,7 @@ policy-map TRAFFIC_QUEUE_TOWARDS_BOB
   random-detect discard-class 1 250 400 10
  class QOS_GROUP_DISCARD_CLASS_0
   bandwidth percent 5 
+  queue-limit 450
   random-detect discard-class-based
   random-detect discard-class 0 50 100 9
  !
