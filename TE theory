@@ -1,0 +1,82 @@
+Assigning traffic to TE
+QoS
+Inter-As
+
+
+
+
+introduces explicit routing
+constraint-based routing
+admission control
+uses RSVP-TE to establish LSPs
+supports re-optimization
+it's unidirectional
+
+
+TE Mechanisms steps:
+====================
+1) Link information distribution
+2) Path calculation
+3) Path setup
+4) Forwarding traffic to the tunnel
+
+STEP 1) Link information distribution
+==========================================
+- Flood link information -- isis or ospf extension
+	--for isis -- wide metrics is required
+-Link information
+	interface address
+	neighbor address
+	physical bandwidth
+	maximum reservable BW
+	unreserved BW (at eight priorities)
+	TE metric (administrative weight)
+	Administrative group (attribute flags)
+- All TE node build a TE topology database
+
+STEP 2) Path Calculation
+========================================
+-TE nodes perform constraint-based routing
+-Headend responsible for path calculation.
+-SPF check ignores paths that donot meet requirements
+-Tunnel can be signaled once path is established.
+
+STEP 3) Path Setup
+==============================
+-Tunnel signaled with RSVP-TE
+-Soft state maintained with downstream PATH messages
+-Soft state maintained woth upstream RESV messages
+-LFIB populated using RSVP labels allocated by RESV messages
+
+STEP 4) Forwarding traffic to the tunnel
+==============================================
+Tunnel path computation independent of backbone routing
+Traffic enters in tunnel at headend
+-Autoroute (announce or destination)
+	-impacts routing decision only of headend router.
+	-not visible to other TE routers
+	-other TE routers may prefer other link towards headend
+	-it's local to headend
+-Forwarding Adjacency
+	-impacts routing decision of all TE routers.
+	-link is visible for all TE routers
+	-can be preffered using metric commands
+-Static route
+-Policy Based Routing (PBR) (available on IOS, not on XR. On XR work-around using route-policy is availble)
+==============================================================
+
+TE Tunnel Attributes
+===================
+-unidirectional
+-destination - tail
+-priority / preemption (setup and hold) highesst is 0 lower is 7
+-attributes / affinity
+	coloring particular links in a way to allot that link for that particular traffic.
+-bandwidth / loadshare
+-local protection (FRR)
+-Path options (explicit/dynamic)
+
+===============================
+Attribute Flags:
+=====================
+Affinity bits
