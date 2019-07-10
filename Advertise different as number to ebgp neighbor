@@ -1,0 +1,5 @@
+Advertise different as number to ebgp neighbor
+
+router bgp 50
+ neighbor 199.4.8.4 local-as 50.1 no-prepend replace-as dual-as
+!
