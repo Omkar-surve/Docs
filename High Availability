@@ -1,0 +1,82 @@
+High Availability:
+
+High availabilty is related to device only. Graceful restart and NSF are the same thing denoted differently in protocols.
+Graceful restart in BGP only supports IPv4 and IPv6 address-family only.
+
+NSF/Graceful-restart and NSR both requires SSO (Statefull Switchover in RSP)
+
+Graceful restart / NSF for IGP: (XRv and CSR1000v only supported)
+==========================
+
+XRv/XE:
+
+router isis 90
+ nsf cisco
+ nsr
+
+router isis 50
+ nsf ietf              =====> IETF mode sends state change updates to neighbor before GR/NSF while cisco mode does not do that.
+ nsf interval 3
+ nsf interface wait 60
+ !
+
+Graceful restart in BGP:
+==============================
+IOS/XE:
+
+router bgp 50
+ bgp ha-mode sso prefer 
+ bgp graceful-restart restart-time 60
+ bgp graceful-restart stalepath-time 185
+ bgp graceful-restart
+!
+Show command:  sh bgp vpnv4 unicast all neighbors | in (BGP neighbor is|Graceful)
+
+XRv:
+
+router bgp 90
+ neighbor-group RRs
+  graceful-restart restart-time 60								// wait time after graceful restart
+  graceful-restart stalepath-time 185							// time for graceful restart
+  address-family vpnv4 unicast
+   long-lived-graceful-restart capable							// activates graceful restart
+   long-lived-graceful-restart stale-time send 185 accept 185	// time to wait for neighbor's graceful restart
+  !
+  address-family vpnv6 unicast
+   long-lived-graceful-restart capable
+   long-lived-graceful-restart stale-time send 185 accept 185
+  !
+ !
+
+Show command:  sh bgp vpnv4 unicast neighbors detail | in "BGP neighbor is|Graceful"
+
+Graceful-maintainence/Graceful-Shutdown in BGP:
+========================================
+Graceful maintainence is configured only when we want to move traffic from current router to other. Means other router is preffered over this router.
+
+XRv:
+
+router bgp 90
+ graceful-maintenance activate all-neighbors retain-routes		// enable graceful-maintenance globally
+ neighbor-group RRs												// I-BGP neighbor
+  graceful-maintenance
+   local-preference 0
+   activate
+  !
+ neighbor 199.4.8.8        										// E-BGP neighbor
+  graceful-maintenance
+   as-prepends 4
+   activate
+  !
+ !
+!
+
+Show command:  sh bgp vpnv4 unicast neighbors detail | in "BGP neighbor is|Graceful"
+
+XE:
+
+router bgp 50
+ bgp ha-mode sso prefer 
+ bgp graceful-shutdown all vrfs 60 local-preference 1 community 3277799
+!
+Show command:  sh bgp vpnv4 unicast all neighbors | in (BGP neighbor is|Graceful)
