@@ -80,3 +80,12 @@ TE Tunnel Attributes
 Attribute Flags:
 =====================
 Affinity bits
+
+
+=============================
+Inter-AS TE
+=============================
+Option A and Option B ==> TE tunnels stiching
+Option C and UMPLS ===> Inter-AS TE
+
+
