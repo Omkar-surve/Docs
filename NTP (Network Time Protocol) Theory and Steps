@@ -1,0 +1,26 @@
+NTP (Network Time Protocol):
+=============================
+Packet advertised - Broadcast
+					Multicast (per interface)
+					
+Stratum : Accuracy in time. Lesser stratum is better.
+Offset: must be lesser than 1 sec.
+NTP server must be valid, reference ID must be set (ntp server id on client side).
+Clock must be synchronized.
+
+Step1: Time-Stamping Router Logs
+
+Step2: Setting the time
+
+Step3: Adjusting Daylight Time zone (Optional)
+
+Step4: Configure NTP Master
+
+Step5: Configure NTP client
+
+Step6: Authenticate NTP devices
+
+Step7: NTP server redunduncy (multiple NTP peers and multiple NTP servers for client)
+
+Step8: Manually set NTP Periodic Synchronization interval
+
