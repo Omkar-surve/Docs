@@ -10,13 +10,27 @@ Clock must be synchronized.
 
 Step1: Time-Stamping Router Logs
 
+service timestamps debug datetime msec
+service timestamps log datetime msec
+
 Step2: Setting the time
+
+clock timezone TEST 5 30
+clock calendar-valid
 
 Step3: Adjusting Daylight Time zone (Optional)
 
+clock summer-time TEST1 recurring 
+
 Step4: Configure NTP Master
 
+ntp master 7
+
 Step5: Configure NTP client
+
+RR6#sh run | s ntp  
+ntp broadcastdelay 5
+ntp server 90.0.0.5 prefer
 
 Step6: Authenticate NTP devices
 
