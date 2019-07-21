@@ -1,0 +1,41 @@
+IOS XRv is an implementation of Cisco IOS XR running as a full virtual machine on a hypervisor.
+IOS XRv is a platform independent (PI) software router platform within the IOS XR product portfolio. IOS XRv is a VM supporting full virtualization (i.e. with no hypervisor specific customizations) and, as such, is generalized to run on any x86 compute hardware (server or laptop) running standard hypervisors.
+
+This software platform provides the IOS XR software feature set including XR manageability, control plane, routing and forwarding.
+
+IOS XRv does not attempt to provide a virtual representation of any particular physical router, rather it is a representation of the IOS XR software and operating system, and as such it does not present some components that you would expect on physical systems such as line cards, fabric cards, multi-chassis, that are not appropriate for the VM delivery that IOS XRv provides.
+
+This image is provided 'as-is'. There is no support for this image from Cisco's Technical Advisory center. This image is not for use in a production environment.
+
+Here is a list of features which have been tested and should work:
+IPv4
+IPv6
+BGP, MP-BGP
+EIGRP
+ICMP
+OSPF
+NTP
+TFTP
+MPLS
+MPLS L3VPN
+MPLS TE
+ISIS
+mVPN GRE / mLDP / P2MP TE
+AAA
+RADIUS
+TACACS
+SNMP
+FLEX CLI
+Multicast (PIM, MSDP, IPv6)
+Syslog
+VLANs / QinQ (.1Q, .1AD)
+RPL
+ACLs
+SSH
+VRF-LITE
+
+Definitely NOT supported
+L2 and platform dependent features (bundle, qos, …)
+BFD
+
+For more information on the IOS XRv, please refer to http://www.cisco.com/c/en/us/support/routers/ios-xrv-router/tsd-products-support-series-home.html516
