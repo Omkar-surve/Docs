@@ -1,0 +1,37 @@
+
+Features support- Cisco Nodes on EVE-NG
+List of supported features for IOSv: (Layer 3 switch equivalent feature set)
+
+802.1Q, AAA, ACL, BGP, DHCP, DNS, EEM, EIGRP, EoMPLS, Flex Netflow + TNF, GRE, ICMP, IGMP, IP SLA, IPSec, IPv6, ISIS, L2TPv3, MPLS, MPLS L2VPN, MPLS L3VPN, MPLS TE, Multicast, NAT, NTP, OSPF, PfR, PIM, PPPoE, RADIUS, RIP, SNMP, SSH, SYSLOG, TACACS, TFTP, VRF-LITE
+
+Features likely to work for IOSv:
+
+HSRP, VRRP, GLBP, EZVPN, QoS, LISP, ZBFW, Performance Monitor
+Read more for IOSv: https://learningnetwork.cisco.com/docs/DOC-30469
+
+
+List of supported features for IOSvL2: (Layer 2 switch equivalent feature set)
+
+Layer-2 forwarding , Switchport, 802.1q trunk, 802.1q  VLANs , Spanning Tree, Port-Channel (Pagp and Lacp), 802.1x passthrough, Port-ACLs, Dynamic Arp Inspection, DHCP Snooping, IP device tracking, Switched Virtual Interfaces, Layer-3 forwarding over SVIs, Routing protocol support, VTP v1-3, PVST, QoS, Inter-VLAN routing, VLAN Access Maps (VACLs / access control lists for VLANs), ACL functionality for both layer2 and layer3 protocol packets, Dynamic Trunking Protocol support, Switchport protected mode
+
+Read more for IOSvL2: https://learningnetwork.cisco.com/docs/DOC-30404
+
+List of supported features for CSR1000v: ( ISR router equivalent  feature set)
+
+802.1Q, AAA, ACL, BGP, DHCP, DNS, EEM, EIGRP, EoMPLS, Flex Netflow + TNF, GRE, ICMP, IGMP, IP SLA, IPSec, IPv6, ISIS, L2TPv3, MPLS, MPLS L2VPN, MPLS L3VPN, MPLS TE, Multicast, NAT, NTP, OSPF, PfR, PIM, PPPoE, RADIUS, RIP, SNMP, SSH, SYSLOG, TACACS, TFTP, VRF-LITE
+
+Features likely to work for CSR1000v:
+HSRP, VRRP, GLBP, EZVPN, QoS, LISP, ZBFW, Performance Monitor
+
+Read more for CSR1000v: http://www.cisco.com/c/en/us/products/routers/cloud-services-router-1000v-series/datasheet-listing.html
+
+List of supported features for Nexus9000v:
+
+Programmability: NXAPI, Puppet Integration (Native), Puppet Integration (Guest Shell), Chef Integration (Native) and Chef Integration (Guest Shell).
+
+L3 Features: CDP, LLDP, BGP v4, BGP v6, OSPFv2, OSPFv3, EIGRP, RIP.
+
+L2 Features: L2 Switching Unicast, L2 Switching Broadcast, L2 Switching Multicast, ARP Suppression, MAC learning, Static/Router MAC, Switchport, 802.1q VLAN Trunk/Access, STP, L3 SVI, Subinterfaces, VXLAN and VXLAN EVPN, VXLAN EVPN Multi-Site and vPC, Port Channel.
+
+Read more for Nexus9000v: https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/9-x/nx-osv/configuration/guide/b_Cisco_Nexus_9000v_9x/b_Cisco_Nexus_9000v_9x_chapter_010.html#concept_CFB4F9FC4EF04A86835CF9C64C4EB8A4
+
