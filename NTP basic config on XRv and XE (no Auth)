@@ -1,0 +1,110 @@
+XRv:
+====
+Server side:
+============
+clock timezone TEST 5 25  ==> set clock
+!
+ntp
+ interface Loopback0
+  broadcast 	==> to specify this port will listen to ntp broadcast messages
+ !
+ interface GigabitEthernet0/0/0/0
+  broadcast	==> to specify this port will listen to ntp broadcast messages
+ !
+ master 5	==> ntp master with stratum 5
+ broadcastdelay 5  ==> required at both sides
+ log-internal-sync ==> log ntp state
+!
+!
+
+Client side:
+============
+clock timezone TEST 5 25  ==> set clock
+!
+ntp
+ interface Loopback0
+  broadcast client	==> to specify this port will listen to ntp broadcast messages
+ !
+ interface GigabitEthernet0/0/0/0
+  broadcast client	==> to specify this port will listen to ntp broadcast messages
+ !
+ server 90.0.0.5	==> ntp server address
+ broadcastdelay 5  ==> required at both sides
+ log-internal-sync ==> log ntp state
+!
+!
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+CSR1000v and vIOS:
+=========================
+
+Server side:
+=============
+interface Loopback0
+ ntp broadcast
+!
+interface Ethernet0/0
+ ntp broadcast client
+ ntp broadcast
+!
+interface Ethernet0/1
+ ntp broadcast client
+!
+interface Ethernet0/2
+ ntp broadcast client
+!
+interface Ethernet0/3
+ ntp broadcast client	==> listen to ntp broadcast messages
+ ntp broadcast			==> send ntp broadcast messages
+!
+ntp logging				==> log ntp state
+ntp master 2			==> This is NTP server
+ntp server 90.0.0.5 	==> required as to only assign one port as ntp server.
+!
+
+Client side:
+=============
+clock timezone TEST 5 25  ==> set clock
+!
+ntp logging 		  ==> log ntp state
+ntp broadcastdelay 5  ==> only required at client side.
+ntp source Loopback0
+ntp update-calendar   ==> synchronize hardware clock with NTP server.
+ntp server 90.0.0.5
+!
+
+
+
+
+
+ NTP PEERING
+ ============
+ +--------------------------------------------------------------------+
+ | XRv:                             | CSR1000v/vIOS                   |
+ | =====                            | ==============                  |
+ |                                  |                                 |
+ |ntp                               | ntp logging                     |
+ | interface Loopback0              | ntp master 2                    |
+ | !                                | ntp peer 90.0.0.1               |
+ | interface GigabitEthernet0/0/0/0 |                                 |
+ | !                                |                                 |
+ | interface GigabitEthernet0/0/0/1 |                                 |
+ | !                                |                                 |
+ | interface GigabitEthernet0/0/0/2 |                                 |
+ | !                                |                                 |
+ | peer 90.0.0.5                    |                                 |
+ | broadcastdelay 5                 |                                 |
+ | log-internal-sync                |                                 |
+ |!                                 |                                 |
+ |                                  |                                 |
+ |                                  |                                 |
+ |                                  |                                 |
+ |                                  |                                 |
+ |                                  |                                 |
+ |                                  |                                 |
+ |                                  |                                 |
+ |                                  |                                 |
+ +--------------------------------------------------------------------+
+
